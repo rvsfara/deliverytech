@@ -1,6 +1,8 @@
 package com.deliverytech.service.impl;
 
 import com.deliverytech.model.Restaurante;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.deliverytech.repository.RestauranteRepository;
 import com.deliverytech.service.RestauranteService;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +26,15 @@ public class RestauranteServiceImpl implements RestauranteService {
     public Optional<Restaurante> buscarPorId(Long id) {
         return restauranteRepository.findById(id);
     }
-
+    /* 
     @Override
     public List<Restaurante> listarTodos() {
         return restauranteRepository.findAll();
+    } */
+    //Modificado: A assinatura do étodo agora aceita Pageable
+    @Override
+    public Page<Restaurante> listarTodos(Pageable pageable) {
+        return restauranteRepository.findAll(pageable);
     }
 
     @Override

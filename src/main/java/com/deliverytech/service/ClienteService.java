@@ -1,7 +1,11 @@
 package com.deliverytech.service;
 
 import com.deliverytech.model.Cliente;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.cache.annotation.Cacheable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +13,11 @@ import java.util.Optional;
 public interface ClienteService {
     Cliente cadastrar(Cliente cliente);
     Optional<Cliente> buscarPorId(Long id);
-    List<Cliente> listarAtivos();
+
+    //List<Cliente> listarAtivos();
+    //Modificado: A assinatura do étodo agora aceita Pageable
+    Page<Cliente> listarAtivos(Pageable pageable);
+
     Cliente atualizar(Long id, Cliente clienteAtualizado);
     void ativarDesativar(Long id);
 }

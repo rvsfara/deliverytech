@@ -1,9 +1,13 @@
 package com.deliverytech.service.impl;
 
 import com.deliverytech.model.Cliente;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.deliverytech.repository.ClienteRepository;
 import com.deliverytech.service.ClienteService;
 import lombok.RequiredArgsConstructor;
+
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +29,15 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteRepository.findById(id);
     }
 
+    /* 
     @Override
     public List<Cliente> listarAtivos() {
         return clienteRepository.findByAtivoTrue();
+    } */
+    //Modificado: Repassa o objeto 'pageable' para o repositório
+    @Override
+    public Page<Cliente> listarAtivos(Pageable pageable) {
+        return clienteRepository.findByAtivoTrue(pageable);
     }
 
     @Override

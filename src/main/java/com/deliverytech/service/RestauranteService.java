@@ -1,14 +1,21 @@
 package com.deliverytech.service;
 
 import com.deliverytech.model.Restaurante;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface RestauranteService {
+public interface RestauranteService {import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
     Restaurante cadastrar(Restaurante restaurante);
     Optional<Restaurante> buscarPorId(Long id);
-    List<Restaurante> listarTodos();
+
+    //List<Restaurante> listarTodos();
+    //Modificado: A assinatura do étodo agora aceita Pageable
+    Page<Restaurante> listarTodos(Pageable pageable);
+
     List<Restaurante> buscarPorCategoria(String categoria);
     Restaurante atualizar(Long id, Restaurante restauranteAtualizado);
 }

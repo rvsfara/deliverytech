@@ -4,6 +4,8 @@ import com.deliverytech.dto.request.RestauranteRequest;
 import com.deliverytech.dto.response.RestauranteResponse;
 import com.deliverytech.model.Restaurante;
 import com.deliverytech.service.RestauranteService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,13 +37,20 @@ public class RestauranteController {
                 salvo.getTaxaEntrega(), salvo.getTempoEntregaMinutos(), salvo.getAtivo()));
     }
 
+    /*
     @GetMapping
     public List<RestauranteResponse> listarTodos() {
         return restauranteService.listarTodos().stream()
                 .map(r -> new RestauranteResponse(r.getId(), r.getNome(), r.getCategoria(), r.getTelefone(), r.getTaxaEntrega(), r.getTempoEntregaMinutos(), r.getAtivo()))
                 .collect(Collectors.toList());
+    } */
+    //Modificado: A assinatura do étodo agora aceita Pageable
+    @GetMapping
+    public Page<RestauranteResponse> listarTodos(Pageable pageable) {
+        Page<Restaurante> restaurantesPaginados = restauranteService.listarTodos(pageable);
+        return restaurantesPaginados.map(r -> new RestauranteResponse(r.getId(), r.getNome(), r.getCategoria(), r.getTelefone(), r.getTaxaEntrega(), r.getTempoEntregaMinutos(), r.getAtivo()));
     }
-
+    
     @GetMapping("/{id}")
     public ResponseEntity<RestauranteResponse> buscarPorId(@PathVariable Long id) {
         return restauranteService.buscarPorId(id)
