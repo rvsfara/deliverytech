@@ -56,12 +56,12 @@ public class ClienteController {
         Page<Cliente> clientesPaginados = clienteService.listarAtivos(pageable);
         return clientesPaginados.map(c -> new ClienteResponse(c.getId(), c.getNome(), c.getEmail(), c.getAtivo()));
     }
-
+    // Método ajustado para resolver erro verificar no pageable para o endpoit simplificado com delay
     @GetMapping("/clientes") // Mapeia a URL http://localhost:8080/clientes
     public List<ClienteResponse> listarClientesNoEndpointSimples() {
         logger.info("Acessando o endpoint simplificado /clientes");
 
-        return clienteService.listarAtivos().stream()
+        return clienteService.listarAtivos(null).stream()
                 .map(c -> new ClienteResponse(c.getId(), c.getNome(), c.getEmail(), c.getAtivo()))
                 .collect(Collectors.toList());
     }

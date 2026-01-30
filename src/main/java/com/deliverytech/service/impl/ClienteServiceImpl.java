@@ -7,7 +7,6 @@ import com.deliverytech.repository.ClienteRepository;
 import com.deliverytech.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 
-import org.springdoc.core.converters.models.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
