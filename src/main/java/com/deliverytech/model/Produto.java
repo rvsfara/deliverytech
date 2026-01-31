@@ -22,6 +22,7 @@ public class Produto {
 
     private BigDecimal preco;
 
+    @Builder.Default
     private Boolean disponivel = true;
 
     @ManyToOne

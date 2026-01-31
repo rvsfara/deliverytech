@@ -10,6 +10,6 @@ public class EntityNotFoundException extends BusinessException{
  * @param id O ID da entidade não encontrada.
  */
     public EntityNotFoundException(String entityName, Long id) {
-        super(String.format("%s com id %d não encontrado", entityName, id);
+        super(String.format("%s com id %d não encontrado", entityName, id));
     }
 }

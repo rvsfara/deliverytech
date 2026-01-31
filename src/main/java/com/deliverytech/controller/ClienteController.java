@@ -2,7 +2,7 @@ package com.deliverytech.controller;
 
 import com.deliverytech.dto.request.ClienteRequest;
 import com.deliverytech.dto.response.ClienteResponse;
-import com.deliverytech.exception.EntityNotFoundException;;
+import com.deliverytech.exception.EntityNotFoundException;
 import com.deliverytech.model.Cliente;
 import com.deliverytech.service.ClienteService;
 import org.springframework.data.domain.Page;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.net.URI;
 
 import java.util.List;
 import java.util.stream.Collectors;

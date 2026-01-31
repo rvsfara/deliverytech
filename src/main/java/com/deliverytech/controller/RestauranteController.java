@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.net.URI;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -63,7 +64,7 @@ public class RestauranteController {
         return restauranteService.buscarPorId(id)
                 .map(r -> new RestauranteResponse(r.getId(), r.getNome(), r.getCategoria(), r.getTelefone(), r.getTaxaEntrega(), r.getTempoEntregaMinutos(), r.getAtivo()))
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new EntityNotFoundException("Restaurante", id);
+                .orElseThrow(() -> new EntityNotFoundException("Restaurante", id));
     }
 
     @GetMapping("/categoria/{categoria}")

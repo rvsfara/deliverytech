@@ -19,9 +19,9 @@ public class Cliente {
 
     @Column(unique = true)
     private String email;
-
+    @Builder.Default
     private Boolean ativo = true;
-
+    @Builder.Default
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)

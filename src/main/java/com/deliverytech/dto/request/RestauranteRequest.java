@@ -25,7 +25,7 @@ public class RestauranteRequest {
     private BigDecimal taxaEntrega;
 
     @Min(value = 10, message = "O tempo de entrega mínimo é de 10 minutos")
-    @NotNull(message = "O tempo de entrega é obrigatório"
+    @NotNull(message = "O tempo de entrega é obrigatório")
     @Max(value = 120, message = "O tempo de entrega máximo é de 120 minutos")
     private Integer tempoEntregaMinutos;
 }

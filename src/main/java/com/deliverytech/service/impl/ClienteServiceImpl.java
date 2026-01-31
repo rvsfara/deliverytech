@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,12 +54,13 @@ public class ClienteServiceImpl implements ClienteService {
             clienteRepository.save(c);
         });
     }
+/* 
  private void simulateDelay() {
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-    }
+    } */
 
 }

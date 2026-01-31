@@ -1,6 +1,6 @@
 package com.deliverytech.controller;
 
-import com.deliverytech.dto.request.ItemPedidoRequest;
+//import com.deliverytech.dto.request.ItemPedidoRequest;
 import com.deliverytech.dto.request.PedidoRequest;
 import com.deliverytech.dto.response.ItemPedidoResponse;
 import com.deliverytech.dto.response.PedidoResponse;
@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.net.URI;
 
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
@@ -25,61 +26,64 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PedidoController {
 
-    private final PedidoService pedidoService;
-    private final ClienteService clienteService;
-    private final RestauranteService restauranteService;
-    private final ProdutoService produtoService;
+        private final PedidoService pedidoService;
+        private final ClienteService clienteService;
+        private final RestauranteService restauranteService;
+        private final ProdutoService produtoService;
 
-    @PostMapping
-    public ResponseEntity<PedidoResponse> criar(@Valid @RequestBody PedidoRequest request) {
-        Cliente cliente = clienteService.buscarPorId(request.getClienteId())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente", request.getClienteId()));
-        Restaurante restaurante = restauranteService.buscarPorId(request.getRestauranteId())
-                .orElseThrow(() -> new EntityNotFoundException("Restaurante", request.getRestauranteId()));
+        @PostMapping
+        public ResponseEntity<PedidoResponse> criar(@Valid @RequestBody PedidoRequest request) {
+                Cliente cliente = clienteService.buscarPorId(request.getClienteId())
+                                .orElseThrow(() -> new EntityNotFoundException("Cliente", request.getClienteId()));
+                Restaurante restaurante = restauranteService.buscarPorId(request.getRestauranteId())
+                                .orElseThrow(() -> new EntityNotFoundException("Restaurante",
+                                                request.getRestauranteId()));
 
-        List<ItemPedido> itens = request.getItens().stream().map(itemRequest -> {
-            Produto produto = produtoService.buscarPorId(itemRequest.getProdutoId())
-                    .orElseThrow(() -> new EntityNotFoundException("Produto", itemRequest.getProdutoId()));
-            return ItemPedido.builder()
-                    .produto(produto)
-                    .quantidade(itemRequest.getQuantidade())
-                    .precoUnitario(produto.getPreco())
-                    .build();
-        }).collect(Collectors.toList());
+                List<ItemPedido> itens = request.getItens().stream().<ItemPedido>map(itemRequest -> {
+                        Produto produto = produtoService.buscarPorId(itemRequest.getProdutoId())
+                                        .orElseThrow(() -> new EntityNotFoundException("Produto",
+                                                        itemRequest.getProdutoId()));
+                        return ItemPedido.builder()
+                                        .produto(produto)
+                                        .quantidade(itemRequest.getQuantidade())
+                                        .precoUnitario(produto.getPreco())
+                                        .build();
+                }).collect(Collectors.toList());
 
-        BigDecimal total = itens.stream()
-                .map(i -> i.getPrecoUnitario().multiply(BigDecimal.valueOf(i.getQuantidade())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal total = itens.stream()
+                                .map(i -> i.getPrecoUnitario().multiply(BigDecimal.valueOf(i.getQuantidade())))
+                                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Pedido pedido = Pedido.builder()
-                .cliente(cliente)
-                .restaurante(restaurante)
-                .status(StatusPedido.CRIADO)
-                .total(total)
-                .enderecoEntrega(request.getEnderecoEntrega())
-                .itens(itens)
-                .build();
+                Pedido pedido = Pedido.builder()
+                                .cliente(cliente)
+                                .restaurante(restaurante)
+                                .status(StatusPedido.CRIADO)
+                                .total(total)
+                                .enderecoEntrega(request.getEnderecoEntrega())
+                                .itens(itens)
+                                .build();
 
-        Pedido salvo = pedidoService.criar(pedido);
-        List<ItemPedidoResponse> itensResp = salvo.getItens().stream()
-                .map(i -> new ItemPedidoResponse(i.getProduto().getId(), i.getProduto().getNome(), i.getQuantidade(), i.getPrecoUnitario()))
-                .collect(Collectors.toList());
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(salvo.getId())
-                .toUri();
-        PedidoResponse pedidoResponse = new PedidoResponse(
-                salvo.getId(),
-                cliente.getId(),
-                restaurante.getId(),
-                salvo.getEnderecoEntrega(),
-                salvo.getTotal(),
-                salvo.getStatus(),
-                salvo.getDataPedido(),
-                itensResp
-        );
+                Pedido salvo = pedidoService.criar(pedido);
+                List<ItemPedidoResponse> itensResp = salvo.getItens().stream()
+                                .map(i -> new ItemPedidoResponse(i.getProduto().getId(), i.getProduto().getNome(),
+                                                i.getQuantidade(), i.getPrecoUnitario()))
+                                .collect(Collectors.toList());
+                // Retorna 201 Created com a localização do novo recurso no header
+                URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                                .path("/{id}")
+                                .buildAndExpand(salvo.getId())
+                                .toUri();
+                PedidoResponse pedidoResponse = new PedidoResponse(
+                                salvo.getId(),
+                                cliente.getId(),
+                                restaurante.getId(),
+                                salvo.getEnderecoEntrega(),
+                                salvo.getTotal(),
+                                salvo.getStatus(),
+                                salvo.getDataPedido(),
+                                itensResp);
 
-        return ResponseEntity.created(location).body(pedidoResponse);
+                return ResponseEntity.created(location).body(pedidoResponse);
 
-    }
+        }
 }

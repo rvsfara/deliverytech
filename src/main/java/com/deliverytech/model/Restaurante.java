@@ -3,7 +3,6 @@ package com.deliverytech.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -25,7 +24,7 @@ public class Restaurante {
     private BigDecimal taxaEntrega;
 
     private Integer tempoEntregaMinutos;
-
+    @Builder.Default
     private Boolean ativo = true;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)

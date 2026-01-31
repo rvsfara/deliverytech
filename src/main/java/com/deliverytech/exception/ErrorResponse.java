@@ -19,14 +19,23 @@ public class ErrorResponse {
     private final String message;
     private final String path;
     private final Map<String, String> details;
-    //Contrutor alternativo para erros que não possuem detalhes de campos específicos.
-    public ErrorResponse(LocalDateTime timestamp, int status, String error, String message, String path, Map<String, String> details) {
+    //Construtor principal com todos os camps
+    public ErrorResponse(int status, String error, String message, String path, Map<String, String> details){
         this.timestamp = LocalDateTime.now();
         this.status = status;
         this.error = error;
         this.message = message;
         this.path = path;
         this.details = details;
+    }
+    //Contrutor alternativo para erros que não possuem detalhes de campos específicos.
+    public ErrorResponse(int status, String error, String message, String path) {
+        this.timestamp = LocalDateTime.now();
+        this.status = status;
+        this.error = error;
+        this.message = message;
+        this.path = path;
+        this.details = null;
     }
     //Getters para que os campos sejam serializados em JSON.
     public LocalDateTime getTimestamp() {

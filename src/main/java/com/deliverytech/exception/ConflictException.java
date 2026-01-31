@@ -13,5 +13,3 @@ public class ConflictException extends BusinessException {
     }
 }
 
-
-}
