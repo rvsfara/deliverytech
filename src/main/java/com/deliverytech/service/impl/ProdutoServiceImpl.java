@@ -17,11 +17,17 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public Produto cadastrar(Produto produto) {
+        if (produto == null) {
+            throw new IllegalArgumentException("Produto não pode ser nulo");
+        }
         return produtoRepository.save(produto);
     }
 
     @Override
     public Optional<Produto> buscarPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id não pode ser nulo");
+        }
         return produtoRepository.findById(id);
     }
 
@@ -32,6 +38,9 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public Produto atualizar(Long id, Produto atualizado) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id não pode ser nulo");
+        }
         return produtoRepository.findById(id)
             .map(p -> {
                 p.setNome(atualizado.getNome());
@@ -44,6 +53,9 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public void alterarDisponibilidade(Long id, boolean disponivel) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id não pode ser nulo");
+        }
         produtoRepository.findById(id).ifPresent(p -> {
             p.setDisponivel(disponivel);
             produtoRepository.save(p);

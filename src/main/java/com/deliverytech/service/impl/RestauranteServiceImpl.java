@@ -19,11 +19,17 @@ public class RestauranteServiceImpl implements RestauranteService {
 
     @Override
     public Restaurante cadastrar(Restaurante restaurante) {
+        if (restaurante == null) {
+            throw new IllegalArgumentException("Restaurante não pode ser nulo");
+        }
         return restauranteRepository.save(restaurante);
     }
 
     @Override
     public Optional<Restaurante> buscarPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("O id não pode ser nulo");
+        }
         return restauranteRepository.findById(id);
     }
     /* 
@@ -34,6 +40,9 @@ public class RestauranteServiceImpl implements RestauranteService {
     //Modificado: A assinatura do étodo agora aceita Pageable
     @Override
     public Page<Restaurante> listarTodos(Pageable pageable) {
+        if (pageable == null) {
+            throw new IllegalArgumentException("Pageable não pode ser nulo");
+        }
         return restauranteRepository.findAll(pageable);
     }
 
@@ -44,6 +53,9 @@ public class RestauranteServiceImpl implements RestauranteService {
 
     @Override
     public Restaurante atualizar(Long id, Restaurante atualizado) {
+        if (id == null) {
+            throw new IllegalArgumentException("O id não pode ser nulo");
+        }
         return restauranteRepository.findById(id)
             .map(r -> {
                 r.setNome(atualizado.getNome());

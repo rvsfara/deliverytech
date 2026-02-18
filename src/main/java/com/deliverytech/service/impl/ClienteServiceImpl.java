@@ -19,11 +19,17 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente cadastrar(Cliente cliente) {
+        if (cliente == null) {
+            throw new IllegalArgumentException("Cliente não pode ser nulo");
+        }
         return clienteRepository.save(cliente);
     }
 
     @Override
     public Optional<Cliente> buscarPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id não pode ser nulo");
+        }
         return clienteRepository.findById(id);
     }
 
@@ -40,6 +46,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente atualizar(Long id, Cliente atualizado) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id não pode ser nulo");
+        }
         return clienteRepository.findById(id)
                 .map(c -> {
                     c.setNome(atualizado.getNome());
@@ -49,6 +58,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void ativarDesativar(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id não pode ser nulo");
+        }
         clienteRepository.findById(id).ifPresent(c -> {
             c.setAtivo(!c.getAtivo());
             clienteRepository.save(c);
