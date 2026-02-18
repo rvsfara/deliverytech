@@ -6,6 +6,9 @@ import com.deliverytech.model.Role;
 import com.deliverytech.model.Usuario;
 import com.deliverytech.repository.UsuarioRepository;
 import com.deliverytech.security.JwtUtil;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +22,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Autenticaçao", description = "Endpoints para registro e Login de usuários")
 public class AuthController {
 
     private final UsuarioRepository usuarioRepository;
@@ -26,6 +30,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
+    @Operation(summary = "Registrar um novo usuário", description = "Registra um novo usuário no sistema (cliente ou restaurante) e retorna um token JWT para acesso.")
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
         if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -41,11 +46,16 @@ public class AuthController {
                 .restauranteId(request.getRestauranteId())
                 .build();
 
-        usuarioRepository.save(usuario);
-        String token = jwtUtil.generateToken(User.withUsername(usuario.getEmail()).password(usuario.getSenha()).authorities("ROLE_" + usuario.getRole().name()).build(), usuario);
-        return ResponseEntity.ok(token);
+        if (usuario != null) {
+            usuarioRepository.save(usuario);
+            String token = jwtUtil.generateToken(User.withUsername(usuario.getEmail()).password(usuario.getSenha()).authorities("ROLE_" + usuario.getRole().name()).build(), usuario);
+            return ResponseEntity.ok(token);
+        } else {
+            return ResponseEntity.status(500).body("Erro ao criar usuário");
+        }
     }
 
+    @Operation(summary = "Autentica um usuário", description = "Autentica um usuário com email e senha e retorna um token JWT válido para acesso.")
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha()));
